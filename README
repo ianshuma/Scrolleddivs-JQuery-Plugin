@@ -1,0 +1,75 @@
+Scrolleddivs Jquery Plugin helps to get the effect similar to the Google Reader's “mark items as read when scrolled to their end” as it returns the list of the ids of the inner divs those have been scrolled to their end, provided the divs are inside an outer div say in the following structure and all have a selector in common, here class = "inner". Using this list of ids, we can mark those inner divs as "READ BY USER.
+
+<div id = ”OuterDiv” class = "outer" style = “width:300px;height:300px;overflow:auto;”>
+	<div id = “1” class = “inner”></div>
+	<div id = “2” class = “inner”></div>
+	<div id = “3” class = “inner”></div>
+	<div id = “4” class = “inner”></div>
+	<div id = “5” class = “inner”></div>
+	...
+	<div id = "n" class = "inner"></div>
+</div>
+
+The outer div has definite dimensions and is scrollable if its contents overflow and the inner divs are in the form of an array. Scrolleddivs Jquery plugin, on scroll of outer div returns a list of ids of “inner” divs whose end has been scrolled so that we can mark those inner divs as read by user. 
+
+The plugin function is called on the onscroll event of the outer div and if it returns empty array, no “inner” class div has been scrolled upto its end.
+
+Usage:
+
+jquery([selector for outer div]).bind('scroll', function(){
+
+	ids = [];
+	ids = jquery(this).scrolleddivs({
+			selector : [selector for inner divs except id selector]
+		});
+
+	console.dir('Ids of divs whose end is reached: '+ids);
+});
+
+Example for above structure:
+
+jquery('#OuterDiv').bind('scroll', function(){
+		ids = [];
+		ids = jquery(this).scrolleddivs({
+			selector : '.inner'
+		});
+
+	console.dir('Ids of divs whose end is reached: '+ids);
+	jquery.each(ids, function(){
+			jquery(this).css('color','#FF0000') //Mark those divs in RED Color or mark it as 'READ BY USER'
+		});
+	
+	});
+
+Important Note:
+
+Before using the above plugin to get the list of divs read till end, make sure of the following points:
+
+1. The plugin returns the ids of only first level child divs of the outer div.
+
+2. All the first level child divs should have a class or any other selector, in common such that the “selector” attribute passed to plugin on call, selects all the first level child divs, here “inner” class divs.
+
+In this case, when '.inner' is passed in 'selector' attribute, plugin doesn't give desired result:
+
+<div id = ”OuterDiv” class = "outer" style = “width:300px;height:300px;overflow:auto;”>
+	<div id = “1” class = “inner”></div>
+	<div id = “2” class = “inner”></div>
+	<div id = "3" class = "extra"></div>    //Different class.
+</div>
+
+3. Make sure that the no other divs except the immediate child, has the qualifies to the selector "selector" provided in plugin call.
+
+In this case, plugin doesn't give desired result:
+
+<div id = ”OuterDiv” class = "outer" style = “width:300px;height:300px;overflow:auto;”>
+	<div id = “1” class = “inner”></div>
+		<div id = "1-1" class = "inner"></div>  //wrong: same class "inner"
+	<div id = “2” class = “inner”></div>
+	
+	...
+	<div id = "n" class = "inner"></div>
+</div>
+
+
+In case of queries, you can contact me on ianshuma@gmail.com
+
